@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Practice App</title>
+  <link rel="stylesheet" href="/practice/practice.css" />
+</head>
+<body>
+  <header class="topbar">
+    <span class="logo">Acme Practice</span>
+    <nav>
+      <a href="/index.html">Lessons</a>
+      <a href="/practice/login.html">Sign in</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Practice App</h1>
+    <p class="lede">A small, deliberately ordinary web app. Every page here exists so you have something realistic to automate.</p>
+
+    <div class="card-grid">
+      <a class="link-card" href="/practice/login.html">
+        <strong>Sign in</strong>
+        <span>Form validation, error states, redirect on success</span>
+      </a>
+      <a class="link-card" href="/practice/signup.html">
+        <strong>Create account</strong>
+        <span>Text inputs, select, radios, checkboxes, textarea</span>
+      </a>
+      <a class="link-card" href="/practice/dashboard.html">
+        <strong>Dashboard</strong>
+        <span>Auth-gated page with stats and navigation</span>
+      </a>
+      <a class="link-card" href="/practice/orders.html">
+        <strong>Orders table</strong>
+        <span>Rows, filtering, search, sorting, status badges</span>
+      </a>
+      <a class="link-card" href="/practice/dynamic.html">
+        <strong>Dynamic content</strong>
+        <span>Delayed loads, spinners, toasts, dialogs, iframes</span>
+      </a>
+    </div>
+
+    <h2>Test credentials</h2>
+    <div class="panel">
+      <dl style="margin:0;display:grid;grid-template-columns:120px 1fr;gap:6px 14px;font-size:14px">
+        <dt style="color:var(--p-muted);font-weight:600">Email</dt><dd style="margin:0"><code>ada@example.com</code></dd>
+        <dt style="color:var(--p-muted);font-weight:600">Password</dt><dd style="margin:0"><code>playwright123</code></dd>
+      </dl>
+    </div>
+  </main>
+</body>
+</html>

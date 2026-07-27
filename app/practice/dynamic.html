@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dynamic content &middot; Acme Practice</title>
+  <link rel="stylesheet" href="/practice/practice.css" />
+  <style>
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: #16202e; color: #fff;
+      padding: 13px 18px; border-radius: 10px; font-size: 14px;
+      box-shadow: 0 8px 24px rgba(16,32,46,0.2);
+    }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    iframe { width: 100%; height: 190px; border: 1px solid var(--p-border); border-radius: 11px; background: #fff; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <span class="logo">Acme Practice</span>
+    <nav>
+      <a href="/practice/index.html">Practice home</a>
+      <a href="/practice/orders.html">Orders</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Dynamic content</h1>
+    <p class="lede">Everything here is slow, delayed, or awkward on purpose. This is where auto-waiting earns its keep.</p>
+
+    <h2>Delayed load</h2>
+    <div class="panel">
+      <div class="row">
+        <button id="load-report" type="button">Load report</button>
+        <div class="spinner" id="spinner" hidden aria-label="Loading"></div>
+      </div>
+      <div id="report" hidden style="margin-top:16px">
+        <h3 style="margin:0 0 6px;font-size:16px">Q3 revenue report</h3>
+        <p style="margin:0;font-size:14px;color:var(--p-muted)">Generated after a 1.5 second delay. Total: <strong>$48,210.00</strong></p>
+      </div>
+    </div>
+
+    <h2>Button that enables late</h2>
+    <div class="panel">
+      <p style="margin:0 0 12px;font-size:14px;color:var(--p-muted)">This button is disabled for two seconds after page load.</p>
+      <button id="late-button" type="button" disabled>Now you can click me</button>
+      <p id="late-result" role="status" hidden style="margin:12px 0 0;font-size:14px">Clicked successfully.</p>
+    </div>
+
+    <h2>Toast notification</h2>
+    <div class="panel">
+      <button id="show-toast" type="button">Save changes</button>
+      <p style="margin:12px 0 0;font-size:14px;color:var(--p-muted)">A toast appears for 2.5 seconds, then disappears on its own.</p>
+    </div>
+
+    <h2>Native dialogs</h2>
+    <div class="panel">
+      <div class="row">
+        <button id="confirm-btn" class="secondary" type="button">Delete account</button>
+        <button id="prompt-btn" class="secondary" type="button">Rename workspace</button>
+      </div>
+      <p id="dialog-result" role="status" style="margin:12px 0 0;font-size:14px;color:var(--p-muted)">No dialog answered yet.</p>
+    </div>
+
+    <h2>New tab</h2>
+    <div class="panel">
+      <a href="/practice/index.html" target="_blank" rel="noopener">Open the practice home in a new tab</a>
+    </div>
+
+    <h2>Iframe</h2>
+    <div class="panel">
+      <iframe id="embedded" title="Embedded signup" src="/practice/embedded.html"></iframe>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('load-report').addEventListener('click', () => {
+      const spinner = document.getElementById('spinner');
+      const report = document.getElementById('report');
+      report.hidden = true;
+      spinner.hidden = false;
+      setTimeout(() => {
+        spinner.hidden = true;
+        report.hidden = false;
+      }, 1500);
+    });
+
+    const lateButton = document.getElementById('late-button');
+    setTimeout(() => { lateButton.disabled = false; }, 2000);
+    lateButton.addEventListener('click', () => {
+      document.getElementById('late-result').hidden = false;
+    });
+
+    document.getElementById('show-toast').addEventListener('click', () => {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.setAttribute('role', 'status');
+      toast.textContent = 'Changes saved';
+      document.body.append(toast);
+      setTimeout(() => toast.remove(), 2500);
+    });
+
+    const dialogResult = document.getElementById('dialog-result');
+
+    document.getElementById('confirm-btn').addEventListener('click', () => {
+      const ok = window.confirm('Really delete this account?');
+      dialogResult.textContent = ok ? 'Account deleted.' : 'Deletion cancelled.';
+    });
+
+    document.getElementById('prompt-btn').addEventListener('click', () => {
+      const name = window.prompt('New workspace name?', 'Acme');
+      dialogResult.textContent = name ? `Workspace renamed to ${name}.` : 'Rename cancelled.';
+    });
+  </script>
+</body>
+</html>

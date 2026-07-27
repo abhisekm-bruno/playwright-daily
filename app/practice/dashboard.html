@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard &middot; Acme Practice</title>
+  <link rel="stylesheet" href="/practice/practice.css" />
+</head>
+<body>
+  <header class="topbar">
+    <span class="logo">Acme Practice</span>
+    <nav>
+      <a href="/practice/orders.html">Orders</a>
+      <a href="/practice/dynamic.html">Dynamic</a>
+      <button class="secondary" id="logout" type="button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1 id="greeting">Welcome back</h1>
+    <p class="lede" id="subtitle">Here is what happened while you were away.</p>
+
+    <section aria-label="Statistics" class="stats" id="stats">
+      <div class="stat"><div class="label">Open orders</div><div class="value">12</div></div>
+      <div class="stat"><div class="label">Revenue</div><div class="value">$48.2k</div></div>
+      <div class="stat"><div class="label">Customers</div><div class="value">318</div></div>
+      <div class="stat"><div class="label">Churn</div><div class="value">1.4%</div></div>
+    </section>
+
+    <h2>Quick actions</h2>
+    <div class="card-grid">
+      <a class="link-card" href="/practice/orders.html"><strong>View orders</strong><span>Filter and search the order table</span></a>
+      <a class="link-card" href="/practice/signup.html"><strong>Invite a teammate</strong><span>Opens the account creation form</span></a>
+      <a class="link-card" href="/practice/dynamic.html"><strong>Run a report</strong><span>Slow-loading content and toasts</span></a>
+    </div>
+  </main>
+
+  <script>
+    const raw = sessionStorage.getItem('acme:user');
+
+    if (!raw) {
+      window.location.replace('/practice/login.html');
+    } else {
+      const user = JSON.parse(raw);
+      const firstName = user.name.split(' ')[0];
+      document.getElementById('greeting').textContent = `Welcome back, ${firstName}`;
+      document.getElementById('subtitle').textContent = `Signed in as ${user.email}`;
+    }
+
+    document.getElementById('logout').addEventListener('click', () => {
+      sessionStorage.removeItem('acme:user');
+      window.location.assign('/practice/login.html');
+    });
+  </script>
+</body>
+</html>

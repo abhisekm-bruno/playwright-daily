@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orders &middot; Acme Practice</title>
+  <link rel="stylesheet" href="/practice/practice.css" />
+</head>
+<body>
+  <header class="topbar">
+    <span class="logo">Acme Practice</span>
+    <nav>
+      <a href="/practice/dashboard.html">Dashboard</a>
+      <a href="/practice/dynamic.html">Dynamic</a>
+      <button class="secondary" id="logout" type="button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Orders</h1>
+    <p class="lede">Search, filter, and sort. Good practice for locator filtering and looping.</p>
+
+    <div class="toolbar">
+      <div>
+        <label for="search" style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Search orders</label>
+        <input id="search" type="text" placeholder="Customer or product" />
+      </div>
+      <div>
+        <label for="status-filter" style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Status</label>
+        <select id="status-filter">
+          <option value="all">All statuses</option>
+          <option value="Shipped">Shipped</option>
+          <option value="Pending">Pending</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+    </div>
+
+    <p id="row-count" role="status" style="font-size:14px;color:var(--p-muted)"></p>
+
+    <table id="orders-table">
+      <caption class="visually-hidden" style="position:absolute;left:-9999px">Customer orders</caption>
+      <thead>
+        <tr>
+          <th scope="col"><button class="secondary" data-sort="id" style="padding:2px 8px;font-size:12px">Order</button></th>
+          <th scope="col"><button class="secondary" data-sort="customer" style="padding:2px 8px;font-size:12px">Customer</button></th>
+          <th scope="col">Product</th>
+          <th scope="col"><button class="secondary" data-sort="quantity" style="padding:2px 8px;font-size:12px">Qty</button></th>
+          <th scope="col"><button class="secondary" data-sort="total" style="padding:2px 8px;font-size:12px">Total</button></th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody id="orders-body"></tbody>
+    </table>
+
+    <p id="empty-state" hidden style="margin-top:18px;color:var(--p-muted)">No orders match your filters.</p>
+  </main>
+
+  <script>
+    if (!sessionStorage.getItem('acme:user')) {
+      window.location.replace('/practice/login.html');
+    }
+
+    const ORDERS = [
+      { id: 'ORD-1001', customer: 'Grace Hopper',   product: 'Widget',      quantity: 3,  total: 149.97, status: 'Shipped' },
+      { id: 'ORD-1002', customer: 'Alan Turing',    product: 'Gizmo',       quantity: 1,  total: 89.0,   status: 'Pending' },
+      { id: 'ORD-1003', customer: 'Katherine Johnson', product: 'Widget',   quantity: 12, total: 599.88, status: 'Shipped' },
+      { id: 'ORD-1004', customer: 'Linus Torvalds', product: 'Doohickey',   quantity: 2,  total: 42.5,   status: 'Cancelled' },
+      { id: 'ORD-1005', customer: 'Barbara Liskov', product: 'Gizmo',       quantity: 5,  total: 445.0,  status: 'Shipped' },
+      { id: 'ORD-1006', customer: 'Grace Hopper',   product: 'Thingamajig', quantity: 1,  total: 19.99,  status: 'Pending' },
+      { id: 'ORD-1007', customer: 'Margaret Hamilton', product: 'Widget',   quantity: 7,  total: 349.93, status: 'Shipped' },
+      { id: 'ORD-1008', customer: 'Ada Lovelace',   product: 'Doohickey',   quantity: 4,  total: 85.0,   status: 'Pending' },
+      { id: 'ORD-1009', customer: 'Alan Turing',    product: 'Thingamajig', quantity: 9,  total: 179.91, status: 'Cancelled' },
+      { id: 'ORD-1010', customer: 'Radia Perlman',  product: 'Gizmo',       quantity: 2,  total: 178.0,  status: 'Shipped' },
+    ];
+
+    const body = document.getElementById('orders-body');
+    const search = document.getElementById('search');
+    const statusFilter = document.getElementById('status-filter');
+    const rowCount = document.getElementById('row-count');
+    const emptyState = document.getElementById('empty-state');
+
+    let sortKey = null;
+    let sortAsc = true;
+
+    const money = (n) => '$' + n.toFixed(2);
+
+    function visibleOrders() {
+      const term = search.value.trim().toLowerCase();
+      const status = statusFilter.value;
+
+      let rows = ORDERS.filter((o) => {
+        const matchesTerm = !term || o.customer.toLowerCase().includes(term) || o.product.toLowerCase().includes(term);
+        const matchesStatus = status === 'all' || o.status === status;
+        return matchesTerm && matchesStatus;
+      });
+
+      if (sortKey) {
+        rows = [...rows].sort((a, b) => {
+          const x = a[sortKey];
+          const y = b[sortKey];
+          const cmp = typeof x === 'number' ? x - y : String(x).localeCompare(String(y));
+          return sortAsc ? cmp : -cmp;
+        });
+      }
+
+      return rows;
+    }
+
+    function render() {
+      const rows = visibleOrders();
+      body.replaceChildren();
+
+      for (const order of rows) {
+        const tr = document.createElement('tr');
+        tr.dataset.orderId = order.id;
+        tr.innerHTML = `
+          <td>${order.id}</td>
+          <td>${order.customer}</td>
+          <td>${order.product}</td>
+          <td>${order.quantity}</td>
+          <td>${money(order.total)}</td>
+          <td><span class="badge ${order.status.toLowerCase()}">${order.status}</span></td>`;
+        body.append(tr);
+      }
+
+      rowCount.textContent = `Showing ${rows.length} of ${ORDERS.length} orders`;
+      emptyState.hidden = rows.length > 0;
+    }
+
+    search.addEventListener('input', render);
+    statusFilter.addEventListener('change', render);
+
+    for (const button of document.querySelectorAll('[data-sort]')) {
+      button.addEventListener('click', () => {
+        const key = button.dataset.sort;
+        sortAsc = sortKey === key ? !sortAsc : true;
+        sortKey = key;
+        render();
+      });
+    }
+
+    document.getElementById('logout').addEventListener('click', () => {
+      sessionStorage.removeItem('acme:user');
+      window.location.assign('/practice/login.html');
+    });
+
+    render();
+  </script>
+</body>
+</html>

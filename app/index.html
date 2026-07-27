@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playwright Daily</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>Playwright Daily</h1>
+        <p>30 days &middot; 30 minutes &middot; TypeScript</p>
+      </div>
+
+      <div class="progress-box">
+        <div class="progress-label">
+          <span>Progress</span>
+          <span id="progress-count">0 / 30</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+
+      <nav id="day-nav"></nav>
+
+      <div class="progress-box" style="padding-top:16px">
+        <a href="/practice/index.html">Practice app &rarr;</a>
+      </div>
+    </aside>
+
+    <main class="main" id="lesson"></main>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

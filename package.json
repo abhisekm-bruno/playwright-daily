@@ -1,0 +1,26 @@
+{
+  "name": "playwright-daily",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A 30-day, 30-minutes-a-day course for learning Playwright with TypeScript, including an interactive lesson site and a practice web app to automate.",
+  "type": "module",
+  "scripts": {
+    "learn": "node scripts/server.mjs",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:solutions": "playwright test --config=playwright.solutions.config.ts",
+    "report": "playwright show-report",
+    "codegen": "playwright codegen http://localhost:4173",
+    "typecheck": "tsc --noEmit",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2",
+    "vercel": "^57.0.0"
+  }
+}

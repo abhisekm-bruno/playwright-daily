@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Embedded widget</title>
+  <link rel="stylesheet" href="/practice/practice.css" />
+  <style>body { background: #fff; } .container { padding: 18px 20px; }</style>
+</head>
+<body>
+  <div class="container">
+    <h2 style="margin:0 0 10px;font-size:16px">Newsletter signup</h2>
+    <form id="embedded-form">
+      <div class="field">
+        <label for="iframe-email">Work email</label>
+        <input id="iframe-email" type="email" placeholder="you@company.com" />
+      </div>
+      <button type="submit" style="padding:8px 16px;font-size:14px">Subscribe</button>
+      <p id="iframe-result" role="status" hidden style="margin:10px 0 0;font-size:14px;color:var(--p-ok)">Subscribed.</p>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('embedded-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      document.getElementById('iframe-result').hidden = false;
+    });
+  </script>
+</body>
+</html>

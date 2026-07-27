@@ -1,0 +1,12 @@
+# Only app/ is published. Everything below is local tooling.
+node_modules
+tests
+solutions
+scripts
+test-results
+playwright-report
+blob-report
+playwright.config.ts
+playwright.solutions.config.ts
+tsconfig.json
+package-lock.json

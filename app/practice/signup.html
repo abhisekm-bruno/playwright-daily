@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create account &middot; Acme Practice</title>
+  <link rel="stylesheet" href="/practice/practice.css" />
+</head>
+<body>
+  <header class="topbar">
+    <span class="logo">Acme Practice</span>
+    <nav>
+      <a href="/practice/index.html">Practice home</a>
+      <a href="/practice/login.html">Sign in</a>
+    </nav>
+  </header>
+
+  <main class="container narrow">
+    <h1>Create account</h1>
+    <p class="lede">Every input type you are likely to meet, on one page.</p>
+
+    <div class="success" id="confirmation" hidden>
+      <h3>Account created</h3>
+      <dl>
+        <dt>Name</dt><dd id="c-name"></dd>
+        <dt>Email</dt><dd id="c-email"></dd>
+        <dt>Country</dt><dd id="c-country"></dd>
+        <dt>Plan</dt><dd id="c-plan"></dd>
+        <dt>Newsletter</dt><dd id="c-newsletter"></dd>
+      </dl>
+    </div>
+
+    <div class="panel">
+      <div class="alert" role="alert" id="error" hidden></div>
+
+      <form id="signup-form" novalidate>
+        <div class="field">
+          <label for="first-name">First name</label>
+          <input id="first-name" name="firstName" type="text" />
+        </div>
+
+        <div class="field">
+          <label for="last-name">Last name</label>
+          <input id="last-name" name="lastName" type="text" />
+        </div>
+
+        <div class="field">
+          <label for="signup-email">Email</label>
+          <input id="signup-email" name="email" type="email" placeholder="you@example.com" />
+        </div>
+
+        <div class="field">
+          <label for="country">Country</label>
+          <select id="country" name="country">
+            <option value="">Choose a country</option>
+            <option value="IN">India</option>
+            <option value="US">United States</option>
+            <option value="GB">United Kingdom</option>
+            <option value="DE">Germany</option>
+            <option value="JP">Japan</option>
+          </select>
+        </div>
+
+        <fieldset>
+          <legend>Plan</legend>
+          <div class="choice">
+            <input type="radio" id="plan-free" name="plan" value="Free" checked />
+            <label for="plan-free">Free</label>
+          </div>
+          <div class="choice">
+            <input type="radio" id="plan-pro" name="plan" value="Pro" />
+            <label for="plan-pro">Pro</label>
+          </div>
+          <div class="choice">
+            <input type="radio" id="plan-enterprise" name="plan" value="Enterprise" />
+            <label for="plan-enterprise">Enterprise</label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="notes">Notes</label>
+          <textarea id="notes" name="notes" placeholder="Anything we should know?"></textarea>
+        </div>
+
+        <div class="choice">
+          <input type="checkbox" id="newsletter" name="newsletter" />
+          <label for="newsletter">Send me the newsletter</label>
+        </div>
+
+        <div class="choice" style="margin-bottom:18px">
+          <input type="checkbox" id="terms" name="terms" />
+          <label for="terms">I accept the terms</label>
+        </div>
+
+        <button type="submit">Create account</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('signup-form');
+    const error = document.getElementById('error');
+    const confirmation = document.getElementById('confirmation');
+
+    const showError = (message) => {
+      error.textContent = message;
+      error.hidden = false;
+      confirmation.hidden = true;
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      error.hidden = true;
+
+      const data = new FormData(form);
+      const firstName = String(data.get('firstName') ?? '').trim();
+      const lastName = String(data.get('lastName') ?? '').trim();
+      const email = String(data.get('email') ?? '').trim();
+
+      if (!firstName || !lastName) return showError('First and last name are required.');
+      if (!email.includes('@')) return showError('Enter a valid email address.');
+      if (!data.get('country')) return showError('Please choose a country.');
+      if (!data.get('terms')) return showError('You must accept the terms to continue.');
+
+      const countrySelect = document.getElementById('country');
+
+      document.getElementById('c-name').textContent = `${firstName} ${lastName}`;
+      document.getElementById('c-email').textContent = email;
+      document.getElementById('c-country').textContent = countrySelect.selectedOptions[0].textContent;
+      document.getElementById('c-plan').textContent = String(data.get('plan'));
+      document.getElementById('c-newsletter').textContent = data.get('newsletter') ? 'Subscribed' : 'Not subscribed';
+
+      confirmation.hidden = false;
+      confirmation.scrollIntoView({ block: 'start' });
+    });
+  </script>
+</body>
+</html>
