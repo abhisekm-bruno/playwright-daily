@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Playwright Daily">
+  <rect width="512" height="512" rx="112" fill="#0b0f17"/>
+  <rect x="96" y="112" width="320" height="288" rx="30" fill="#151c28" stroke="#2c3849" stroke-width="8"/>
+  <path d="M96 176 H416" stroke="#2c3849" stroke-width="8"/>
+  <circle cx="134" cy="144" r="10" fill="#3a4759"/>
+  <circle cx="168" cy="144" r="10" fill="#3a4759"/>
+  <circle cx="202" cy="144" r="10" fill="#3a4759"/>
+  <path d="M176 292 L226 342 L340 228"
+        fill="none" stroke="#4ade80" stroke-width="36"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

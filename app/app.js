@@ -6,6 +6,10 @@ const nav = document.getElementById('day-nav');
 const lessonEl = document.getElementById('lesson');
 const progressFill = document.getElementById('progress-fill');
 const progressCount = document.getElementById('progress-count');
+const mobileProgress = document.getElementById('mobile-progress');
+const sidebar = document.getElementById('sidebar');
+const scrim = document.getElementById('sidebar-scrim');
+const navToggle = document.getElementById('nav-toggle');
 
 const loadCompleted = () => {
   try {
@@ -52,6 +56,7 @@ function renderNav(activeDay) {
     );
     btn.addEventListener('click', () => {
       location.hash = `#day-${lesson.day}`;
+      closeDrawer();
     });
     nav.append(btn);
   }
@@ -60,7 +65,24 @@ function renderNav(activeDay) {
   const done = [...completed].filter((d) => curriculum.some((l) => l.day === d)).length;
   progressCount.textContent = `${done} / ${total}`;
   progressFill.style.width = `${(done / total) * 100}%`;
+  mobileProgress.textContent = `${done}/${total}`;
 }
+
+/* ─────────────────────────── mobile drawer ─────────────────────────── */
+
+function setDrawer(open) {
+  sidebar.classList.toggle('open', open);
+  scrim.hidden = !open;
+  navToggle.setAttribute('aria-expanded', String(open));
+}
+
+const closeDrawer = () => setDrawer(false);
+
+navToggle.addEventListener('click', () => setDrawer(!sidebar.classList.contains('open')));
+scrim.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeDrawer();
+});
 
 /* ─────────────────────────── lesson body ─────────────────────────── */
 
@@ -211,3 +233,14 @@ function firstUnfinishedDay() {
 
 window.addEventListener('hashchange', route);
 route();
+
+/* ─────────────────────────── PWA ─────────────────────────── */
+
+// Service workers need a secure context: https, or localhost during development.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((error) => {
+      console.warn('Service worker registration failed:', error);
+    });
+  });
+}

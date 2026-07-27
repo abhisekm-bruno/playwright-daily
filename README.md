@@ -69,6 +69,22 @@ Reachable at <http://localhost:4173/practice/index.html>.
 
 Sign in with **ada@example.com** / **playwright123**.
 
+## Installing it on your phone
+
+The site is a PWA, so you can install it as an app and read lessons offline.
+
+**Android / Chrome:** open the site, then menu → "Add to Home screen" (or tap the install prompt).
+
+**iPhone / Safari:** open the site, tap Share → "Add to Home Screen". iOS only offers this from Safari, not Chrome.
+
+Once installed it opens without browser chrome, and every lesson plus the whole practice app is cached for offline reading. Content refreshes automatically whenever you open it online, so new days appear without reinstalling.
+
+To regenerate the icons after editing `app/icons/icon.svg`:
+
+```bash
+npm run icons
+```
+
 ## Deploying to Vercel
 
 The `app/` folder is plain static HTML/CSS/JS, so it deploys with no build step. `vercel.json` already points Vercel at it.

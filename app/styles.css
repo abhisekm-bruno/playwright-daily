@@ -33,7 +33,10 @@ a:hover { text-decoration: underline; }
 
 .layout {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  /* minmax(0, 1fr) rather than 1fr: a bare 1fr floors the column at the item's
+     min-content width, and the unwrappable code blocks would push the column
+     wider than the viewport. */
+  grid-template-columns: 320px minmax(0, 1fr);
   min-height: 100vh;
 }
 
@@ -144,7 +147,7 @@ a:hover { text-decoration: underline; }
 
 /* ---------- Main ---------- */
 
-.main { padding: 40px 48px 96px; max-width: 900px; }
+.main { padding: 40px 48px 96px; max-width: 900px; min-width: 0; }
 
 .eyebrow {
   font-size: 12px;
@@ -325,8 +328,125 @@ pre code {
   font-size: 15px;
 }
 
+/* ---------- Mobile bar (hidden on desktop) ---------- */
+
+.mobile-bar { display: none; }
+.sidebar-scrim { display: none; }
+
 @media (max-width: 860px) {
-  .layout { grid-template-columns: 1fr; }
-  .sidebar { position: static; height: auto; }
-  .main { padding: 28px 20px 64px; }
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .main { padding: 24px 18px 72px; max-width: none; }
+  .main h2 { font-size: 25px; }
+  .card { padding: 18px; }
+
+  /* The closed drawer sits off-canvas to the left, which otherwise inflates the
+     document's scroll width and lets the whole page slide sideways. */
+  html, body { overflow-x: hidden; }
+
+  body { padding-top: calc(54px + env(safe-area-inset-top)); }
+
+  .mobile-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* Above the drawer and its scrim, so the toggle stays tappable while open. */
+    z-index: 50;
+    height: calc(54px + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) 14px 0;
+    background: rgba(17, 24, 39, 0.92);
+    /* Safari needs the prefix until 18; without it the bar is only translucent. */
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mobile-title { font-size: 15px; font-weight: 600; }
+
+  .mobile-progress {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .nav-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font: inherit;
+    font-size: 13px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--panel-2);
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .nav-toggle-icon {
+    width: 14px;
+    height: 10px;
+    border-top: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    position: relative;
+  }
+
+  .nav-toggle-icon::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 0;
+    width: 100%;
+    border-top: 2px solid currentColor;
+  }
+
+  /* The day list becomes a slide-in drawer instead of a 30-item wall. */
+  .sidebar {
+    position: fixed;
+    top: calc(54px + env(safe-area-inset-top));
+    bottom: 0;
+    left: 0;
+    width: min(330px, 86vw);
+    height: auto;
+    z-index: 40;
+    transform: translateX(-102%);
+    /* visibility keeps the closed drawer's 30 buttons out of the tab order and
+       away from screen readers; transitioning it defers the hide until the
+       slide-out finishes. */
+    visibility: hidden;
+    transition: transform 0.22s ease, visibility 0.22s;
+    border-right: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .day-link { padding: 11px 12px; font-size: 15px; }
+
+  .sidebar-scrim {
+    display: block;
+    position: fixed;
+    top: calc(54px + env(safe-area-inset-top));
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 35;
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .sidebar-scrim[hidden] { display: none; }
+
+  .footer-actions .btn { flex: 1 1 auto; text-align: center; }
+}
+
+/* Standalone (installed) mode: the OS already draws a title bar area. */
+@media (display-mode: standalone) {
+  .mobile-bar { padding-top: max(env(safe-area-inset-top), 8px); }
 }
