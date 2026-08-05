@@ -79,10 +79,24 @@ The site is a PWA, so you can install it as an app and read lessons offline.
 
 Once installed it opens without browser chrome, and every lesson plus the whole practice app is cached for offline reading. Content refreshes automatically whenever you open it online, so new days appear without reinstalling.
 
+### Daily reminders (iOS)
+
+Open **Daily reminder** in the sidebar (or `/#reminders`). On iPhone, notifications only work from the **installed Home Screen app**, not a Safari tab — the page will tell you if you are still in the browser.
+
+Tap **Enable reminders**, then **Send a test notification**. On iPhone the banner appears when the app is in the background, so swipe home after tapping.
+
+A scheduled 9:00 PM sender is not wired yet. Enabling today proves permission and delivery on your phone; scheduling comes next.
+
 To regenerate the icons after editing `app/icons/icon.svg`:
 
 ```bash
 npm run icons
+```
+
+To regenerate push keys (invalidates existing subscriptions):
+
+```bash
+node scripts/generate-vapid-keys.mjs --force
 ```
 
 ## Deploying to Vercel
