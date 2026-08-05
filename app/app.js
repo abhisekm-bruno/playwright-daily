@@ -1,4 +1,6 @@
 import { curriculum } from './data/curriculum.js';
+import { el } from './dom.js';
+import { renderReminders } from './push.js';
 
 const STORAGE_KEY = 'playwright-daily:completed';
 
@@ -21,15 +23,6 @@ const loadCompleted = () => {
 
 let completed = loadCompleted();
 const saveCompleted = () => localStorage.setItem(STORAGE_KEY, JSON.stringify([...completed]));
-
-const el = (tag, props = {}, ...children) => {
-  const node = Object.assign(document.createElement(tag), props);
-  for (const child of children.flat()) {
-    if (child == null) continue;
-    node.append(typeof child === 'string' ? document.createTextNode(child) : child);
-  }
-  return node;
-};
 
 /* ─────────────────────────── sidebar ─────────────────────────── */
 
@@ -220,6 +213,15 @@ function codeBlockCard(code, title) {
 /* ─────────────────────────── routing ─────────────────────────── */
 
 function route() {
+  closeDrawer();
+
+  if (location.hash === '#reminders') {
+    renderNav(null);
+    window.scrollTo(0, 0);
+    renderReminders(lessonEl, { onNavigate: () => { location.hash = `#day-${firstUnfinishedDay()}`; } });
+    return;
+  }
+
   const match = /^#day-(\d+)$/.exec(location.hash);
   const day = match ? Number(match[1]) : firstUnfinishedDay();
   const lesson = curriculum.find((l) => l.day === day) ?? curriculum[0];

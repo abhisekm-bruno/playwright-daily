@@ -96,6 +96,16 @@ a:hover { text-decoration: underline; }
   transition: width 0.35s ease;
 }
 
+.sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+  margin-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+}
+
 .week-group { padding: 8px 12px; }
 
 .week-title {
@@ -311,6 +321,14 @@ pre code {
 }
 
 .btn:hover { background: var(--border); }
+
+.btn:disabled,
+.btn.primary:disabled {
+  background: var(--panel);
+  border-color: var(--border);
+  color: #5b6879;
+  cursor: not-allowed;
+}
 
 .btn.primary {
   background: var(--accent-dim);

@@ -9,7 +9,7 @@
  * Bump CACHE_VERSION whenever the precache list changes.
  */
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `playwright-daily-${CACHE_VERSION}`;
 
 const PRECACHE = [
@@ -17,6 +17,8 @@ const PRECACHE = [
   '/index.html',
   '/styles.css',
   '/app.js',
+  '/dom.js',
+  '/push.js',
   '/data/curriculum.js',
   '/manifest.webmanifest',
   '/icons/icon-192.png',
@@ -54,6 +56,49 @@ self.addEventListener('activate', (event) => {
     })()
   );
 });
+
+/* ─────────────────────────── push ─────────────────────────── */
+
+self.addEventListener('push', (event) => {
+  let payload = {};
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch {
+    payload = { body: event.data?.text() };
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(payload.title ?? 'Playwright Daily', {
+      body: payload.body ?? "Time for today's 30 minutes.",
+      icon: '/icons/icon-192.png',
+      badge: '/icons/icon-192.png',
+      // A tag replaces an earlier notification instead of stacking duplicates.
+      tag: payload.tag ?? 'daily-reminder',
+      data: { url: payload.url ?? '/' },
+    })
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = event.notification.data?.url ?? '/';
+
+  event.waitUntil(
+    (async () => {
+      const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      for (const client of windows) {
+        if (new URL(client.url).origin === self.location.origin) {
+          await client.focus();
+          if ('navigate' in client) await client.navigate(target);
+          return;
+        }
+      }
+      await self.clients.openWindow(target);
+    })()
+  );
+});
+
+/* ─────────────────────────── fetch ─────────────────────────── */
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
