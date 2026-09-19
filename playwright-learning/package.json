@@ -1,0 +1,11 @@
+{
+  "name": "playwright-learning",
+  "private": true,
+  "description": "One first Playwright test: open playwright.dev and practice locators.",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1"
+  }
+}
